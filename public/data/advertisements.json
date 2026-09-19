@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "title": "Business Advertisement",
+    "description": "New business opening",
+    "image": "/images/advertisements/adv1.png",
+    "phone": "XXXXXXXXXX",
+    "active": true
+  },
+  {
+    "id": 2,
+    "title": "Job Opportunity",
+    "description": "Job vacancy availablesss",
+    "image": "/images/advertisements/adv2.png",
+    "phone": "XXXXXXXXXX",
+    "location": "Tiruvarur",
+    "active": true
+  }
+]

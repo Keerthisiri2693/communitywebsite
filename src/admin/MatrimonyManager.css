@@ -1,0 +1,831 @@
+.matrimony-manager {
+  min-height: 100vh;
+  background: #f5f8f6;
+  color: #1f2937;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.matrimony-manager-header {
+  padding: 25px 6%;
+
+  background: #063f2f;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.matrimony-manager-header h1 {
+  margin: 12px 0 5px;
+  font-size: 28px;
+}
+
+.matrimony-manager-header p {
+  margin: 0;
+  color: #c8e3d8;
+  font-size: 14px;
+}
+
+.matrimony-back-link {
+  color: #d7eee4;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.matrimony-back-link:hover {
+  text-decoration: underline;
+}
+
+.matrimony-export-btn {
+  border: none;
+  border-radius: 9px;
+
+  padding: 12px 18px;
+
+  background: white;
+  color: #063f2f;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.matrimony-export-btn:hover {
+  background: #e8f5ef;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.matrimony-manager-content {
+  width: min(1200px, 92%);
+  margin: 0 auto;
+
+  padding: 35px 0 60px;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.matrimony-manager-message {
+  margin-bottom: 20px;
+
+  padding: 13px 16px;
+
+  background: #e8f5ef;
+  border: 1px solid #c5dfd2;
+
+  border-radius: 10px;
+
+  color: #07563f;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* =========================
+   PRIVACY
+========================= */
+
+.matrimony-privacy-warning {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 15px;
+
+  margin-bottom: 25px;
+  padding: 20px;
+
+  background: #fff9e8;
+
+  border: 1px solid #f0dfad;
+  border-radius: 14px;
+}
+
+.privacy-icon {
+  font-size: 28px;
+}
+
+.matrimony-privacy-warning h3 {
+  margin: 0 0 6px;
+
+  color: #725a17;
+}
+
+.matrimony-privacy-warning p {
+  margin: 0;
+
+  color: #756b4c;
+
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* =========================
+   EDITOR
+========================= */
+
+.matrimony-editor {
+  padding: 30px;
+
+  background: white;
+
+  border: 1px solid #e0e8e4;
+  border-radius: 18px;
+
+  margin-bottom: 35px;
+}
+
+.matrimony-section-title {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-bottom: 25px;
+}
+
+.matrimony-section-icon {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 12px;
+
+  background: #e8f5ef;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+}
+
+.matrimony-section-title h2 {
+  margin: 2px 0 5px;
+
+  color: #063f2f;
+
+  font-size: 21px;
+}
+
+.matrimony-section-title p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.matrimony-form {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 20px;
+}
+
+.matrimony-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-field {
+  grid-column: 1 / -1;
+}
+
+.matrimony-field label {
+  margin-bottom: 8px;
+
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.matrimony-field input,
+.matrimony-field select,
+.matrimony-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid #d9e2dd;
+
+  border-radius: 9px;
+
+  background: #fafcfb;
+
+  color: #222;
+
+  font-family: inherit;
+  font-size: 14px;
+
+  outline: none;
+}
+
+.matrimony-field textarea {
+  resize: vertical;
+}
+
+.matrimony-field input:focus,
+.matrimony-field select:focus,
+.matrimony-field textarea:focus {
+  border-color: #0a654b;
+
+  background: white;
+
+  box-shadow:
+    0 0 0 3px rgba(10, 101, 75, 0.08);
+}
+
+.matrimony-field small {
+  margin-top: 6px;
+
+  color: #888;
+
+  font-size: 11px;
+}
+
+/* Checkbox */
+
+.matrimony-active-field {
+  display: flex;
+  align-items: center;
+}
+
+.matrimony-checkbox {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  color: #374151;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.matrimony-checkbox input {
+  width: 18px;
+  height: 18px;
+
+  accent-color: #0a654b;
+
+  cursor: pointer;
+}
+
+/* Buttons */
+
+.matrimony-form-actions {
+  grid-column: 1 / -1;
+
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 5px;
+}
+
+.matrimony-save-btn {
+  border: none;
+
+  border-radius: 9px;
+
+  padding: 13px 20px;
+
+  background: #0a654b;
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.matrimony-save-btn:hover {
+  background: #07563f;
+}
+
+.matrimony-cancel-btn {
+  border: 1px solid #d6dfda;
+
+  border-radius: 9px;
+
+  padding: 13px 20px;
+
+  background: white;
+
+  color: #555;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.matrimony-cancel-btn:hover {
+  background: #f4f6f5;
+}
+
+/* =========================
+   LIST HEADER
+========================= */
+
+.matrimony-list-section {
+  margin-top: 30px;
+}
+
+.matrimony-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+.matrimony-list-header h2 {
+  margin: 0 0 5px;
+
+  color: #063f2f;
+}
+
+.matrimony-list-header p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+.matrimony-backup-btn {
+  border: 1px solid #d3dfd9;
+
+  border-radius: 8px;
+
+  padding: 10px 14px;
+
+  background: white;
+
+  color: #07563f;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.matrimony-backup-btn:hover {
+  background: #e8f5ef;
+}
+
+/* =========================
+   FILTERS
+========================= */
+
+.matrimony-filters {
+  display: grid;
+
+  grid-template-columns: 1fr 220px;
+
+  gap: 12px;
+
+  margin-bottom: 22px;
+}
+
+.matrimony-filters input,
+.matrimony-filters select {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid #d9e2dd;
+
+  border-radius: 9px;
+
+  background: white;
+
+  color: #333;
+
+  outline: none;
+
+  font-family: inherit;
+}
+
+.matrimony-filters input:focus,
+.matrimony-filters select:focus {
+  border-color: #0a654b;
+}
+
+/* =========================
+   PROFILE GRID
+========================= */
+
+.matrimony-admin-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 22px;
+}
+
+.matrimony-admin-card {
+  overflow: hidden;
+
+  background: white;
+
+  border: 1px solid #e0e8e4;
+
+  border-radius: 16px;
+
+  transition: 0.25s;
+}
+
+.matrimony-admin-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.07);
+}
+
+.matrimony-admin-card.profile-inactive {
+  opacity: 0.68;
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+.matrimony-admin-image {
+  position: relative;
+
+  height: 280px;
+
+  background: #e8f5ef;
+
+  overflow: hidden;
+}
+
+.matrimony-admin-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.matrimony-image-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 70px;
+}
+
+.profile-active-status,
+.profile-hidden-status {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.profile-active-status {
+  background: white;
+  color: #08704f;
+}
+
+.profile-hidden-status {
+  background: #fff1f1;
+  color: #c62828;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.matrimony-admin-content {
+  padding: 22px;
+}
+
+.matrimony-admin-title-row {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 17px;
+}
+
+.matrimony-admin-title-row h3 {
+  margin: 0 0 4px;
+
+  color: #063f2f;
+
+  font-size: 20px;
+}
+
+.matrimony-admin-title-row > div > span {
+  color: #777;
+
+  font-size: 13px;
+}
+
+.profile-gender {
+  flex-shrink: 0;
+
+  padding: 5px 9px;
+
+  border-radius: 15px;
+
+  background: #e8f5ef;
+
+  color: #0a654b;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Details */
+
+.matrimony-admin-details {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 9px;
+
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid #eeeeee;
+
+  color: #555;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+}
+
+.profile-description {
+  margin: 15px 0;
+
+  color: #777;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.matrimony-admin-actions {
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 15px;
+}
+
+.matrimony-admin-actions button {
+  flex: 1;
+
+  padding: 9px 7px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.matrimony-edit-btn {
+  border: 1px solid #bcd9cc;
+
+  background: #e8f5ef;
+
+  color: #07563f;
+}
+
+.matrimony-edit-btn:hover {
+  background: #d9eee4;
+}
+
+.matrimony-hide-btn {
+  border: 1px solid #ead9ad;
+
+  background: #fff9e8;
+
+  color: #806617;
+}
+
+.matrimony-show-btn {
+  border: 1px solid #bcd9cc;
+
+  background: #e8f5ef;
+
+  color: #07563f;
+}
+
+.matrimony-delete-btn {
+  border: 1px solid #f0cccc;
+
+  background: #fff5f5;
+
+  color: #c62828;
+}
+
+.matrimony-delete-btn:hover {
+  background: #ffe8e8;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.matrimony-manager-empty {
+  padding: 50px;
+
+  background: white;
+
+  border: 1px solid #e0e8e4;
+
+  border-radius: 16px;
+
+  text-align: center;
+
+  color: #777;
+}
+
+/* =========================
+   PUBLISH
+========================= */
+
+.matrimony-publish-box {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 18px;
+
+  margin-top: 35px;
+
+  padding: 25px;
+
+  background: #fff9e8;
+
+  border: 1px solid #f0dfad;
+
+  border-radius: 16px;
+}
+
+.publish-box-icon {
+  font-size: 30px;
+}
+
+.matrimony-publish-box h3 {
+  margin: 0 0 12px;
+
+  color: #725a17;
+}
+
+.matrimony-publish-box ol {
+  margin: 0;
+
+  padding-left: 20px;
+
+  color: #756b4c;
+
+  font-size: 14px;
+
+  line-height: 1.9;
+}
+
+.matrimony-publish-box code {
+  margin-left: 5px;
+
+  padding: 2px 6px;
+
+  background: #f4eac8;
+
+  border-radius: 4px;
+
+  font-size: 12px;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 850px) {
+  .matrimony-admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+  .matrimony-manager-header {
+    padding: 20px 5%;
+
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .matrimony-export-btn {
+    width: 100%;
+  }
+
+  .matrimony-manager-content {
+    width: 92%;
+
+    padding-top: 25px;
+  }
+
+  .matrimony-editor {
+    padding: 22px;
+  }
+
+  .matrimony-form {
+    grid-template-columns: 1fr;
+  }
+
+  .full-field {
+    grid-column: auto;
+  }
+
+  .matrimony-form-actions {
+    grid-column: auto;
+
+    flex-direction: column;
+  }
+
+  .matrimony-save-btn,
+  .matrimony-cancel-btn {
+    width: 100%;
+  }
+
+  .matrimony-list-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 15px;
+  }
+
+  .matrimony-backup-btn {
+    width: 100%;
+  }
+
+  .matrimony-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .matrimony-admin-actions {
+    flex-wrap: wrap;
+  }
+
+  .matrimony-admin-actions button {
+    min-width: calc(50% - 5px);
+  }
+
+  .matrimony-publish-box {
+    padding: 20px;
+  }
+}

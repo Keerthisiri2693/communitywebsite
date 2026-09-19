@@ -1,0 +1,544 @@
+.matrimony-page {
+  width: 100%;
+  overflow: hidden;
+}
+
+.matrimony-container {
+  width: 90%;
+  max-width: 1150px;
+  margin: auto;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.matrimony-hero {
+  min-height: 430px;
+
+  display: flex;
+  align-items: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #07563f,
+      #0d7557
+    );
+
+  color: white;
+}
+
+.matrimony-hero-content {
+  width: 90%;
+  max-width: 900px;
+  margin: auto;
+}
+
+.matrimony-label {
+  font-size: 15px;
+  font-weight: 600;
+
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+
+  margin-bottom: 15px;
+}
+
+.matrimony-hero h1 {
+  margin: 0;
+
+  font-size: clamp(42px, 6vw, 68px);
+
+  line-height: 1.1;
+}
+
+.matrimony-hero h1 span {
+  display: block;
+}
+
+.matrimony-hero p:last-child {
+  max-width: 650px;
+
+  margin-top: 25px;
+
+  font-size: 18px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================
+   SECTION
+========================= */
+
+.matrimony-section {
+  padding: 90px 0;
+}
+
+.matrimony-heading {
+  display: flex;
+
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 40px;
+}
+
+.section-label {
+  margin: 0 0 8px;
+
+  color: #0a654b;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.matrimony-heading h2 {
+  margin: 0 0 10px;
+
+  font-size: 40px;
+}
+
+.matrimony-heading p:last-child {
+  margin: 0;
+
+  color: #666;
+
+  line-height: 1.7;
+}
+
+.profile-count {
+  min-width: 110px;
+
+  padding: 18px;
+
+  border-radius: 12px;
+
+  background: #e8f5ef;
+
+  color: #0a654b;
+
+  text-align: center;
+}
+
+.profile-count strong {
+  display: block;
+
+  font-size: 30px;
+}
+
+.profile-count span {
+  font-size: 12px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================
+   FILTERS
+========================= */
+
+.matrimony-filters {
+  display: grid;
+
+  grid-template-columns:
+    1fr 180px 180px auto;
+
+  gap: 12px;
+
+  margin-bottom: 40px;
+
+  padding: 18px;
+
+  border-radius: 14px;
+
+  background: #f7faf8;
+}
+
+.search-box {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 14px;
+
+  background: white;
+
+  border: 1px solid #dce4df;
+
+  border-radius: 8px;
+}
+
+.search-box input {
+  width: 100%;
+
+  padding: 13px 0;
+
+  border: none;
+
+  outline: none;
+
+  font-family: inherit;
+
+  font-size: 14px;
+}
+
+.matrimony-filters select {
+  padding: 13px;
+
+  border: 1px solid #dce4df;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  background: white;
+
+  font-family: inherit;
+
+  cursor: pointer;
+}
+
+.clear-filter {
+  padding: 0 18px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #0a654b;
+
+  color: white;
+
+  font-family: inherit;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   PROFILE GRID
+========================= */
+
+.matrimony-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 25px;
+}
+
+
+/* =========================
+   PROFILE CARD
+========================= */
+
+.profile-card {
+  overflow: hidden;
+
+  background: white;
+
+  border: 1px solid #e3e8e5;
+
+  border-radius: 18px;
+
+  transition: 0.3s;
+}
+
+.profile-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================
+   PHOTO
+========================= */
+
+.profile-image {
+  position: relative;
+
+  width: 100%;
+  height: 280px;
+
+  overflow: hidden;
+
+  background: #e8f5ef;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: 0.4s;
+}
+
+.profile-card:hover
+.profile-image img {
+  transform: scale(1.04);
+}
+
+.profile-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 75px;
+}
+
+.profile-status {
+  position: absolute;
+
+  top: 15px;
+  right: 15px;
+
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  background: white;
+
+  color: #0a654b;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================
+   DETAILS
+========================= */
+
+.profile-details {
+  padding: 25px;
+}
+
+.profile-details h3 {
+  margin: 0;
+
+  font-size: 23px;
+}
+
+.profile-age {
+  margin: 5px 0 18px;
+
+  color: #777;
+
+  font-size: 14px;
+}
+
+.profile-info {
+  padding: 7px 0;
+
+  color: #555;
+
+  font-size: 14px;
+}
+
+.profile-description {
+  margin: 15px 0 0;
+
+  padding-top: 15px;
+
+  border-top: 1px solid #eee;
+
+  color: #777;
+
+  line-height: 1.6;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+.matrimony-message {
+  padding: 70px 20px;
+
+  border-radius: 18px;
+
+  background: #f7faf8;
+
+  text-align: center;
+}
+
+.matrimony-message p {
+  color: #777;
+}
+
+.empty-profile-icon {
+  margin-bottom: 15px;
+
+  font-size: 55px;
+}
+
+.matrimony-loader {
+  width: 38px;
+  height: 38px;
+
+  margin: 0 auto 15px;
+
+  border: 4px solid #dcebe4;
+
+  border-top-color: #0a654b;
+
+  border-radius: 50%;
+
+  animation: matrimonySpin 0.8s linear infinite;
+}
+
+@keyframes matrimonySpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================
+   PRIVACY
+========================= */
+
+.matrimony-privacy {
+  padding: 60px 0;
+
+  background: #f7faf8;
+}
+
+.privacy-box {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 20px;
+
+  padding: 30px;
+
+  border-radius: 16px;
+
+  background: #e8f5ef;
+}
+
+.privacy-icon {
+  font-size: 32px;
+}
+
+.privacy-box h3 {
+  margin: 0 0 8px;
+
+  color: #07563f;
+}
+
+.privacy-box p {
+  margin: 0;
+
+  color: #555;
+
+  line-height: 1.7;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 950px) {
+
+  .matrimony-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .matrimony-filters {
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+  .search-box {
+    grid-column: 1 / -1;
+  }
+
+  .clear-filter {
+    min-height: 45px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+  .matrimony-hero {
+    min-height: 380px;
+  }
+
+  .matrimony-hero h1 {
+    font-size: 42px;
+  }
+
+  .matrimony-section {
+    padding: 65px 0;
+  }
+
+  .matrimony-heading {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .matrimony-heading h2 {
+    font-size: 34px;
+  }
+
+  .matrimony-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .search-box {
+    grid-column: auto;
+  }
+
+  .clear-filter {
+    min-height: 45px;
+  }
+
+  .matrimony-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .privacy-box {
+    flex-direction: column;
+
+    text-align: center;
+  }
+
+}

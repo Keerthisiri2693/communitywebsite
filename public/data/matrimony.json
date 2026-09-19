@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "name": "Example Profile",
+    "age": 25,
+    "gender": "Female",
+    "location": "Sivakasi",
+    "education": "B.E",
+    "profession": "Software Developer",
+    "photo": "/images/matrimony/profile.png",
+    "active": true
+  }
+]
