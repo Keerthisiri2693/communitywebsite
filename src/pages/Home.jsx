@@ -50,12 +50,25 @@ function Home() {
 
           <div className="hero-buttons">
 
+            {/* Explore Matrimony */}
+
             <Link
               to="/services/matrimony"
               className="primary-btn"
             >
-              Explore Matrimony
+              💍 Explore Matrimony
             </Link>
+
+            {/* Apply for Matrimony */}
+
+            <Link
+              to="/matrimony/apply"
+              className="secondary-btn"
+            >
+              📝 Apply for Matrimony
+            </Link>
+
+            {/* Our Services */}
 
             <Link
               to="/services"
@@ -86,6 +99,7 @@ function Home() {
             </span>
 
             <div>
+
               <p className="small-title">
                 Community Updates
               </p>
@@ -93,6 +107,7 @@ function Home() {
               <h2>
                 Advertisements
               </h2>
+
             </div>
 
           </div>
@@ -189,12 +204,11 @@ function Home() {
           <div className="services-grid">
 
 
-            {/* MATRIMONY */}
+            {/* =========================
+                MATRIMONY
+            ========================== */}
 
-            <Link
-              to="/services/matrimony"
-              className="service-card"
-            >
+            <div className="service-card matrimony-card">
 
               <div className="service-icon">
                 💍
@@ -209,14 +223,40 @@ function Home() {
                 connect families within the community.
               </p>
 
-              <span className="service-link">
+
+              {/* View Matrimony */}
+
+              <Link
+                to="/services/matrimony"
+                className="service-link"
+              >
                 View Matrimony →
-              </span>
-
-            </Link>
+              </Link>
 
 
-            {/* ADVERTISEMENT */}
+              {/* Apply Matrimony */}
+
+              <Link
+                to="/matrimony/apply"
+                className="matrimony-apply-btn"
+              >
+                📝 Apply for Matrimony
+              </Link>
+
+
+              {/* Application Information */}
+
+              <p className="matrimony-note">
+                Your application will be reviewed by the
+                community admin before your profile is published.
+              </p>
+
+            </div>
+
+
+            {/* =========================
+                ADVERTISEMENT
+            ========================== */}
 
             <Link
               to="/services/advertisement"
@@ -242,6 +282,52 @@ function Home() {
 
             </Link>
 
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      {/* =========================
+          MATRIMONY APPLICATION CTA
+      ========================== */}
+
+      <section className="matrimony-cta">
+
+        <div className="section-container">
+
+          <div className="matrimony-cta-content">
+
+            <div className="matrimony-cta-icon">
+              💍
+            </div>
+
+            <div>
+
+              <p className="small-title">
+                Matrimony Registration
+              </p>
+
+              <h2>
+                Looking for a Life Partner?
+              </h2>
+
+              <p>
+                Submit your matrimonial profile to our
+                community. Our admin team will review
+                your application before publishing it.
+              </p>
+
+            </div>
+
+            <Link
+              to="/matrimony/apply"
+              className="primary-btn"
+            >
+              Apply Now →
+            </Link>
 
           </div>
 
@@ -328,3 +414,5 @@ function Home() {
 }
 
 export default Home;
+
+

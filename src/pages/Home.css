@@ -1,138 +1,187 @@
 .home {
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  background: #ffffff;
+  color: #263238;
 }
 
-/* =========================
-   COMMON
-========================= */
+
+/* =========================================
+   COMMON CONTAINER
+========================================= */
 
 .section-container {
-  width: 90%;
-  max-width: 1200px;
-  margin: auto;
-}
-
-.small-title {
-  margin: 0 0 8px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.heading-icon {
-  font-size: 35px;
-  margin-right: 12px;
+  width: min(1200px, 92%);
+  margin: 0 auto;
 }
 
 
-/* =========================
-   HERO
-========================= */
+/* =========================================
+   HERO SECTION
+========================================= */
 
 .hero {
-  min-height: 620px;
+  min-height: 560px;
   display: flex;
   align-items: center;
+  position: relative;
+
   background:
     linear-gradient(
       135deg,
-      rgba(10, 70, 55, 0.95),
-      rgba(15, 100, 75, 0.88)
+      rgba(22, 70, 39, 0.96),
+      rgba(46, 125, 50, 0.88)
     );
-  color: white;
+
+  color: #ffffff;
+  padding: 70px 20px;
 }
 
 .hero-content {
-  width: 90%;
-  max-width: 1100px;
-  margin: auto;
+  width: min(850px, 100%);
+  margin: 0 auto;
+  text-align: center;
 }
 
 .hero-subtitle {
-  font-size: 18px;
-  margin-bottom: 15px;
+  margin: 0 0 15px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.9;
 }
 
 .hero h1 {
-  max-width: 750px;
   margin: 0;
-  font-size: clamp(42px, 6vw, 72px);
-  line-height: 1.08;
+  font-size: clamp(38px, 6vw, 68px);
+  line-height: 1.1;
+  font-weight: 800;
 }
 
 .hero h1 span {
   display: block;
+  color: #ffe082;
 }
 
 .hero-description {
-  max-width: 650px;
-  margin: 25px 0;
+  max-width: 720px;
+  margin: 25px auto 35px;
   font-size: 18px;
   line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
 }
+
+
+/* =========================================
+   HERO BUTTONS
+========================================= */
 
 .hero-buttons {
   display: flex;
-  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
-
-/* =========================
-   BUTTONS
-========================= */
-
 .primary-btn,
 .secondary-btn {
-  display: inline-block;
-  padding: 13px 24px;
-  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+  padding: 0 22px;
+
+  border-radius: 10px;
+
   text-decoration: none;
-  font-weight: 600;
-  transition: 0.3s;
+  font-weight: 700;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
 }
 
 .primary-btn {
-  background: white;
-  color: #0a5c45;
+  background: #ffe082;
+  color: #244d32;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 .primary-btn:hover {
   transform: translateY(-2px);
+  background: #ffd54f;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
 }
 
 .secondary-btn {
-  border: 1px solid white;
-  color: white;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.45);
 }
 
 .secondary-btn:hover {
-  background: white;
-  color: #0a5c45;
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 
-/* =========================
-   ADVERTISEMENT
-========================= */
+/* =========================================
+   ADVERTISEMENT SECTION
+========================================= */
 
 .advertisement-section {
-  padding: 70px 0;
-  background: #f7faf8;
+  padding: 65px 20px;
+  background: #f7f9f7;
 }
 
 .section-heading {
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  gap: 15px;
+  margin-bottom: 28px;
+}
+
+.heading-icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: #e8f5e9;
+
+  font-size: 25px;
+}
+
+.small-title {
+  margin: 0 0 6px;
+
+  color: #2e7d32;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .section-heading h2 {
   margin: 0;
+  color: #244d32;
   font-size: 32px;
 }
+
+
+/* =========================================
+   ADVERTISEMENT SCROLL
+========================================= */
 
 .advertisement-wrapper {
   width: 100%;
@@ -141,10 +190,11 @@
 
 .advertisement-track {
   display: flex;
-  width: max-content;
   gap: 20px;
 
-  animation: advertisementScroll 25s linear infinite;
+  width: max-content;
+
+  animation: advertisementScroll 30s linear infinite;
 }
 
 .advertisement-track:hover {
@@ -152,20 +202,26 @@
 }
 
 .advertisement-card {
-  width: 330px;
-  min-height: 180px;
-  display: flex;
-  background: white;
-  border-radius: 14px;
+  width: 340px;
+  flex-shrink: 0;
+
   overflow: hidden;
 
-  box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+
+  border-radius: 16px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+
+  border: 1px solid #edf1ed;
 }
 
 .advertisement-image {
-  width: 110px;
-  height: 180px;
+  display: block;
+
+  width: 100%;
+  height: 190px;
+
   object-fit: cover;
 }
 
@@ -175,207 +231,589 @@
 
 .advertisement-content h3 {
   margin: 0 0 10px;
-  font-size: 18px;
+
+  color: #244d32;
+
+  font-size: 19px;
 }
 
 .advertisement-content p {
-  margin: 5px 0;
-  color: #555;
-  line-height: 1.5;
+  margin: 0;
+
+  color: #666;
+
+  line-height: 1.6;
 }
 
 .advertisement-phone {
+  margin-top: 12px !important;
+
+  color: #2e7d32 !important;
+
   font-weight: 600;
 }
 
 .no-advertisement {
+  width: 100%;
   padding: 30px;
+
+  text-align: center;
+
   color: #777;
+
+  background: #ffffff;
+
+  border-radius: 12px;
 }
+
 
 @keyframes advertisementScroll {
 
-  from {
+  0% {
     transform: translateX(0);
   }
 
-  to {
+  100% {
     transform: translateX(-50%);
   }
 
 }
 
 
-/* =========================
-   SERVICES
-========================= */
+/* =========================================
+   SERVICES SECTION
+========================================= */
 
 .services-section {
-  padding: 80px 0;
+  padding: 75px 20px;
+  background: #ffffff;
 }
 
 .section-title {
-  text-align: center;
-  max-width: 650px;
+  max-width: 700px;
   margin: 0 auto 45px;
+  text-align: center;
 }
 
 .section-title h2 {
-  margin: 0 0 15px;
-  font-size: 38px;
+  margin: 0 0 12px;
+
+  color: #244d32;
+
+  font-size: 36px;
 }
 
-.section-title p {
+.section-title p:last-child {
+  margin: 0;
+
   color: #666;
+
   line-height: 1.7;
 }
+
+
+/* =========================================
+   SERVICES GRID
+========================================= */
 
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 30px;
-  max-width: 900px;
-  margin: auto;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 25px;
 }
 
-.service-card {
-  padding: 40px 30px;
-  text-decoration: none;
-  color: inherit;
 
-  border: 1px solid #e5e5e5;
+/* =========================================
+   SERVICE CARD
+========================================= */
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  padding: 30px;
+
   border-radius: 18px;
 
-  transition: 0.3s;
-  background: white;
+  background: #ffffff;
+
+  border: 1px solid #e7ece7;
+
+  text-decoration: none;
+
+  color: inherit;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .service-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
+
+  border-color: #b7d8ba;
 
   box-shadow:
-    0 15px 40px rgba(0, 0, 0, 0.08);
+    0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
 .service-icon {
-  font-size: 45px;
-  margin-bottom: 20px;
-}
-
-.service-card h3 {
-  font-size: 25px;
-  margin: 0 0 12px;
-}
-
-.service-card p {
-  color: #666;
-  line-height: 1.7;
-}
-
-.service-link {
-  display: inline-block;
-  margin-top: 15px;
-  font-weight: 600;
-}
-
-
-/* =========================
-   COMMUNITY
-========================= */
-
-.community-section {
-  padding: 80px 0;
-  background: #f7faf8;
-}
-
-.community-content {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  max-width: 850px;
-  margin: auto;
-}
-
-.community-icon {
-  min-width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 60px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 50%;
-  background: #0a654b;
+  border-radius: 16px;
 
-  font-size: 45px;
+  background: #e8f5e9;
+
+  font-size: 30px;
+
+  margin-bottom: 20px;
+}
+
+.service-card h3 {
+  margin: 0 0 10px;
+
+  color: #244d32;
+
+  font-size: 23px;
+}
+
+.service-card p {
+  margin: 0;
+
+  color: #666;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================
+   SERVICE LINK
+========================================= */
+
+.service-link {
+  display: inline-block;
+
+  margin-top: 20px;
+
+  color: #2e7d32;
+
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+.service-link:hover {
+  color: #1b5e20;
+}
+
+
+/* =========================================
+   MATRIMONY CARD
+========================================= */
+
+.matrimony-card {
+  position: relative;
+}
+
+.matrimony-apply-btn {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 15px;
+
+  padding: 11px 18px;
+
+  border-radius: 9px;
+
+  background: #2e7d32;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.matrimony-apply-btn:hover {
+  background: #1b5e20;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 15px rgba(46, 125, 50, 0.25);
+}
+
+.matrimony-note {
+  margin-top: 12px !important;
+
+  color: #777 !important;
+
+  font-size: 13px !important;
+
+  line-height: 1.5 !important;
+}
+
+
+/* =========================================
+   MATRIMONY CTA
+========================================= */
+
+.matrimony-cta {
+  padding: 70px 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f1f8f2,
+      #f8fbf8
+    );
+}
+
+.matrimony-cta-content {
+  display: flex;
+
+  align-items: center;
+
+  gap: 25px;
+
+  padding: 35px;
+
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #e1ebe2;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.matrimony-cta-icon {
+  min-width: 72px;
+  width: 72px;
+  height: 72px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e8f5e9;
+
+  font-size: 35px;
+}
+
+.matrimony-cta-content h2 {
+  margin: 5px 0 10px;
+
+  color: #244d32;
+
+  font-size: 28px;
+}
+
+.matrimony-cta-content p {
+  margin: 0;
+
+  color: #666;
+
+  line-height: 1.7;
+}
+
+.matrimony-cta-content .primary-btn {
+  margin-left: auto;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   COMMUNITY SECTION
+========================================= */
+
+.community-section {
+  padding: 75px 20px;
+
+  background: #f7f9f7;
+}
+
+.community-content {
+  display: flex;
+
+  align-items: center;
+
+  gap: 30px;
+
+  max-width: 850px;
+
+  margin: 0 auto;
+}
+
+.community-icon {
+  min-width: 90px;
+  width: 90px;
+  height: 90px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #e8f5e9;
+
+  font-size: 40px;
 }
 
 .community-content h2 {
-  font-size: 36px;
   margin: 5px 0 15px;
+
+  color: #244d32;
+
+  font-size: 32px;
 }
 
-.community-content p {
+.community-content p:not(.small-title) {
+  margin: 0;
+
   color: #666;
+
   line-height: 1.7;
 }
 
 .read-more {
   display: inline-block;
-  margin-top: 10px;
-  font-weight: 600;
+
+  margin-top: 18px;
+
+  color: #2e7d32;
+
+  font-weight: 700;
+
   text-decoration: none;
-  color: #0a654b;
+}
+
+.read-more:hover {
+  color: #1b5e20;
 }
 
 
-/* =========================
+/* =========================================
    CONTACT CTA
-========================= */
+========================================= */
 
 .contact-cta {
   padding: 80px 20px;
+
   text-align: center;
 
-  background: #0a654b;
-  color: white;
+  background:
+    linear-gradient(
+      135deg,
+      #244d32,
+      #2e7d32
+    );
+
+  color: #ffffff;
 }
 
 .contact-cta h2 {
-  font-size: 38px;
-  margin-bottom: 10px;
+  margin: 0 0 10px;
+
+  font-size: 36px;
 }
 
 .contact-cta p {
-  margin-bottom: 25px;
+  margin: 0 0 25px;
+
+  color: rgba(255, 255, 255, 0.85);
+
+  line-height: 1.6;
+}
+
+.contact-cta .primary-btn {
+  display: inline-flex;
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+/* =========================================
+   MOBILE RESPONSIVE
+========================================= */
 
 @media (max-width: 768px) {
 
   .hero {
-    min-height: 550px;
+    min-height: 520px;
+
+    padding: 55px 18px;
   }
 
   .hero h1 {
-    font-size: 45px;
+    font-size: 40px;
   }
+
+  .hero-description {
+    font-size: 16px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    width: 100%;
+
+    max-width: 360px;
+
+    margin: 0 auto;
+  }
+
+  .hero-buttons a {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    text-align: center;
+  }
+
+
+  .advertisement-section,
+  .services-section,
+  .community-section,
+  .matrimony-cta {
+    padding: 55px 18px;
+  }
+
+
+  .section-heading h2 {
+    font-size: 28px;
+  }
+
+
+  .advertisement-card {
+    width: 290px;
+  }
+
+
+  .advertisement-image {
+    height: 165px;
+  }
+
 
   .services-grid {
     grid-template-columns: 1fr;
   }
 
+
+  .service-card {
+    padding: 25px;
+  }
+
+
+  .section-title h2 {
+    font-size: 30px;
+  }
+
+
+  .matrimony-cta-content {
+    flex-direction: column;
+
+    text-align: center;
+
+    padding: 28px 22px;
+  }
+
+
+  .matrimony-cta-content .primary-btn {
+    width: 100%;
+
+    margin-left: 0;
+
+    box-sizing: border-box;
+  }
+
+
   .community-content {
     flex-direction: column;
+
     text-align: center;
   }
 
+
+  .community-content h2 {
+    font-size: 28px;
+  }
+
+
+  .contact-cta {
+    padding: 60px 20px;
+  }
+
+
+  .contact-cta h2 {
+    font-size: 30px;
+  }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .hero-subtitle {
+    font-size: 13px;
+  }
+
+  .hero-description {
+    font-size: 15px;
+  }
+
   .advertisement-card {
-    width: 290px;
+    width: 270px;
+  }
+
+  .service-card h3 {
+    font-size: 21px;
+  }
+
+  .matrimony-apply-btn {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    text-align: center;
   }
 
 }

@@ -2,6 +2,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Link,
 } from "react-router-dom";
 
 // ===============================
@@ -21,6 +22,7 @@ import Services from "./pages/Services";
 import Matrimony from "./pages/Matrimony";
 import Advertisement from "./pages/Advertisement";
 import Contact from "./pages/Contact";
+import MatrimonyApply from "./pages/MatrimonyApply";
 
 // ===============================
 // ADMIN
@@ -56,60 +58,66 @@ function PublicLayout({ children }) {
 
 function NotFound() {
   return (
-    <div
-      style={{
-        minHeight: "70vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
-        padding: "40px",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
+    <PublicLayout>
+
       <div
         style={{
-          fontSize: "60px",
-          marginBottom: "15px",
+          minHeight: "70vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+          padding: "40px",
+          fontFamily: "Arial, sans-serif",
         }}
       >
-        🌙
+
+        <div
+          style={{
+            fontSize: "60px",
+            marginBottom: "15px",
+          }}
+        >
+          🌙
+        </div>
+
+        <h1
+          style={{
+            margin: "0 0 10px",
+            color: "#111",
+          }}
+        >
+          Page Not Found
+        </h1>
+
+        <p
+          style={{
+            color: "#777",
+            marginBottom: "20px",
+          }}
+        >
+          The page you are looking for does not exist.
+        </p>
+
+        <Link
+          to="/"
+          style={{
+            display: "inline-block",
+            padding: "12px 22px",
+            background: "#0a654b",
+            color: "#fff",
+            borderRadius: "8px",
+            textDecoration: "none",
+            fontWeight: "600",
+          }}
+        >
+          ← Go Home
+        </Link>
+
       </div>
 
-      <h1
-        style={{
-          margin: "0 0 10px",
-          color: "#111",
-        }}
-      >
-        Page Not Found
-      </h1>
-
-      <p
-        style={{
-          color: "#777",
-          marginBottom: "20px",
-        }}
-      >
-        The page you are looking for does not exist.
-      </p>
-
-      <a
-        href="/"
-        style={{
-          display: "inline-block",
-          padding: "12px 22px",
-          background: "#0a654b",
-          color: "#fff",
-          borderRadius: "8px",
-          textDecoration: "none",
-          fontWeight: "600",
-        }}
-      >
-        ← Go Home
-      </a>
-    </div>
+    </PublicLayout>
   );
 }
 
@@ -120,13 +128,14 @@ function NotFound() {
 
 function App() {
   return (
+
     <BrowserRouter>
 
       <Routes>
 
-        {/* =========================
+        {/* =================================
             PUBLIC WEBSITE
-        ========================== */}
+        ================================== */}
 
         <Route
           path="/"
@@ -137,6 +146,11 @@ function App() {
           }
         />
 
+
+        {/* =================================
+            ABOUT
+        ================================== */}
+
         <Route
           path="/about"
           element={
@@ -145,6 +159,11 @@ function App() {
             </PublicLayout>
           }
         />
+
+
+        {/* =================================
+            SERVICES
+        ================================== */}
 
         <Route
           path="/services"
@@ -155,6 +174,11 @@ function App() {
           }
         />
 
+
+        {/* =================================
+            MATRIMONY
+        ================================== */}
+
         <Route
           path="/services/matrimony"
           element={
@@ -164,6 +188,25 @@ function App() {
           }
         />
 
+
+        {/* =================================
+            MATRIMONY APPLICATION
+        ================================== */}
+
+        <Route
+          path="/matrimony/apply"
+          element={
+            <PublicLayout>
+              <MatrimonyApply />
+            </PublicLayout>
+          }
+        />
+
+
+        {/* =================================
+            ADVERTISEMENT
+        ================================== */}
+
         <Route
           path="/services/advertisement"
           element={
@@ -172,6 +215,11 @@ function App() {
             </PublicLayout>
           }
         />
+
+
+        {/* =================================
+            CONTACT
+        ================================== */}
 
         <Route
           path="/contact"
@@ -183,44 +231,71 @@ function App() {
         />
 
 
-        {/* =========================
+        {/* =================================
             ADMIN LOGIN
-        ========================== */}
+        ================================== */}
 
         <Route
           path="/admin"
-          element={<AdminLogin />}
+          element={
+            <AdminLogin />
+          }
         />
+
+
+        {/* =================================
+            ADMIN DASHBOARD
+        ================================== */}
 
         <Route
           path="/admin/dashboard"
-          element={<AdminDashboard />}
+          element={
+            <AdminDashboard />
+          }
         />
 
 
+        {/* =================================
+            ADMIN MATRIMONY
+        ================================== */}
+
         <Route
-  path="/admin/matrimony"
-  element={<MatrimonyManager />}
-/>
+          path="/admin/matrimony"
+          element={
+            <MatrimonyManager />
+          }
+        />
 
-<Route
-  path="/admin/advertisements"
-  element={<AdvertisementManager />}
-/>
 
-        {/* =========================
+        {/* =================================
+            ADMIN ADVERTISEMENTS
+        ================================== */}
+
+        <Route
+          path="/admin/advertisements"
+          element={
+            <AdvertisementManager />
+          }
+        />
+
+
+        {/* =================================
             404
-        ========================== */}
+        ================================== */}
 
         <Route
           path="*"
-          element={<NotFound />}
+          element={
+            <NotFound />
+          }
         />
 
       </Routes>
 
     </BrowserRouter>
+
   );
 }
 
 export default App;
+
