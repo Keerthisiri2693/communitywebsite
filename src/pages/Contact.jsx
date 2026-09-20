@@ -1,4 +1,5 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import "./Contact.css";
 
 function Contact() {
@@ -11,6 +12,8 @@ function Contact() {
   });
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,45 +23,68 @@ function Contact() {
       [name]: value,
     }));
 
-    // Hide success message when user starts entering a new enquiry
     if (submitSuccess) {
       setSubmitSuccess(false);
     }
+
+    if (errorMessage) {
+      setErrorMessage("");
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const adminEmail = "keerthanasiriyalu@email.com";
+    setIsSending(true);
+    setSubmitSuccess(false);
+    setErrorMessage("");
 
-    const mailSubject = encodeURIComponent(
-      formData.subject || "Community Website Enquiry"
-    );
+    try {
+      const templateParams = {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email || "Not provided",
+        subject: formData.subject,
+        message: formData.message,
 
-    const mailBody = encodeURIComponent(
-      `Name: ${formData.name}
-Phone: ${formData.phone}
-Email: ${formData.email}
+        // Admin email
+        to_email: "keerthanasiriyalu@gmail.com",
+      };
 
-Message:
-${formData.message}`
-    );
+     await emailjs.send(
+  "service_ivpr5fr",
+  "template_kn6hv0w",
+  {
+    name: formData.name,
+    phone: formData.phone,
+    email: formData.email || "Not provided",
+    subject: formData.subject,
+    message: formData.message,
+  },
+  {
+    publicKey: "uYkHBM0W_J6jjV97Y",
+  }
+);
 
-    // Show success message
-    setSubmitSuccess(true);
+      setSubmitSuccess(true);
 
-    // Open user's email application
-    window.location.href =
-      `mailto:${adminEmail}?subject=${mailSubject}&body=${mailBody}`;
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
 
-    // Clear form
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
+    } catch (error) {
+      console.error("CONTACT EMAIL ERROR:", error);
+
+      setErrorMessage(
+        "Unable to send your message right now. Please try again."
+      );
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -77,7 +103,7 @@ ${formData.message}`
           </p>
 
           <h1>
-            Contact
+            Contact{" "}
             <span>Our Community</span>
           </h1>
 
@@ -123,79 +149,99 @@ ${formData.message}`
               </p>
 
 
-              {/* PHONE */}
+              <div className="contact-info-list">
 
-              <div className="contact-info-item">
+                {/* PHONE */}
 
-                <div className="contact-info-icon">
-                  📞
+                <div className="contact-info-item">
+
+                  <div className="contact-info-icon">
+                    📞
+                  </div>
+
+                  <div className="contact-info-content">
+
+                    <h3>
+                      Phone
+                    </h3>
+
+                    <a href="tel:+919876543210">
+                      +91 98765 43210
+                    </a>
+
+                  </div>
+
                 </div>
 
-                <div>
-                  <span>Phone</span>
 
-                  <a href="tel:+919876543210">
-                    +91 98765 43210
-                  </a>
+                {/* EMAIL */}
+
+                <div className="contact-info-item">
+
+                  <div className="contact-info-icon">
+                    ✉️
+                  </div>
+
+                  <div className="contact-info-content">
+
+                    <h3>
+                      Email
+                    </h3>
+
+                    <a href="mailto:keerthanasiriyalu@gmail.com">
+                      keerthanasiriyalu@gmail.com
+                    </a>
+
+                  </div>
+
                 </div>
 
-              </div>
 
+                {/* LOCATION */}
 
-              {/* EMAIL */}
+                <div className="contact-info-item">
 
-              <div className="contact-info-item">
+                  <div className="contact-info-icon">
+                    📍
+                  </div>
 
-                <div className="contact-info-icon">
-                  ✉️
+                  <div className="contact-info-content">
+
+                    <h3>
+                      Location
+                    </h3>
+
+                    <p>
+                      Thiruvarur, Tamil Nadu, India
+                    </p>
+
+                  </div>
+
                 </div>
 
-                <div>
-                  <span>Email</span>
 
-                  <a href="mailto:keerthanasiriyalu@email.com">
-                    keerthanasiriyalu@email.com
-                  </a>
-                </div>
+                {/* AVAILABILITY */}
 
-              </div>
+                <div className="contact-info-item">
 
+                  <div className="contact-info-icon">
+                    🕐
+                  </div>
 
-              {/* LOCATION */}
+                  <div className="contact-info-content">
 
-              <div className="contact-info-item">
+                    <h3>
+                      Availability
+                    </h3>
 
-                <div className="contact-info-icon">
-                  📍
-                </div>
+                    <p>
+                      Monday - Saturday
+                      <br />
+                      9:00 AM - 6:00 PM
+                    </p>
 
-                <div>
-                  <span>Location</span>
+                  </div>
 
-                  <p>
-                    Thiruvarur, Tamil Nadu, India
-                  </p>
-                </div>
-
-              </div>
-
-
-              {/* WORKING HOURS */}
-
-              <div className="contact-info-item">
-
-                <div className="contact-info-icon">
-                  🕐
-                </div>
-
-                <div>
-                  <span>Availability</span>
-
-                  <p>
-                    Monday - Saturday
-                    <br />
-                    9:00 AM - 6:00 PM
-                  </p>
                 </div>
 
               </div>
@@ -216,8 +262,8 @@ ${formData.message}`
                 </h2>
 
                 <p>
-                  Fill out the form below and we will get
-                  back to you.
+                  Fill out the form below and we will
+                  receive your enquiry directly by email.
                 </p>
 
               </div>
@@ -235,20 +281,52 @@ ${formData.message}`
                   </div>
 
                   <div>
+
                     <h3>
-                      Email Window Opened Successfully
+                      Message Sent Successfully
                     </h3>
 
                     <p>
-                      Your enquiry has been prepared.
-                      Please click <strong>Send</strong> in
-                      your email application to complete it.
+                      Thank you for contacting us.
+                      Your message has been sent successfully.
                     </p>
+
                   </div>
 
                 </div>
               )}
 
+
+              {/* =====================
+                  ERROR MESSAGE
+              ====================== */}
+
+              {errorMessage && (
+                <div className="contact-error">
+
+                  <div className="contact-error-icon">
+                    !
+                  </div>
+
+                  <div>
+
+                    <h3>
+                      Message Not Sent
+                    </h3>
+
+                    <p>
+                      {errorMessage}
+                    </p>
+
+                  </div>
+
+                </div>
+              )}
+
+
+              {/* =====================
+                  FORM
+              ====================== */}
 
               <form
                 className="contact-form"
@@ -270,6 +348,7 @@ ${formData.message}`
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your name"
+                    autoComplete="name"
                     required
                   />
 
@@ -293,6 +372,8 @@ ${formData.message}`
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="Enter phone number"
+                      autoComplete="tel"
+                      inputMode="numeric"
                       required
                     />
 
@@ -312,6 +393,7 @@ ${formData.message}`
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="Enter email"
+                      autoComplete="email"
                     />
 
                   </div>
@@ -386,8 +468,23 @@ ${formData.message}`
                 <button
                   type="submit"
                   className="contact-submit-btn"
+                  disabled={isSending}
                 >
-                  Send Message →
+
+                  {isSending ? (
+                    <>
+                      <span className="contact-spinner"></span>
+                      <span>Sending...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send Message</span>
+                      <span className="submit-arrow">
+                        →
+                      </span>
+                    </>
+                  )}
+
                 </button>
 
               </form>
@@ -402,7 +499,7 @@ ${formData.message}`
 
 
       {/* =========================
-          MAP / LOCATION
+          LOCATION
       ========================== */}
 
       <section className="location-section">
@@ -415,7 +512,7 @@ ${formData.message}`
               📍
             </div>
 
-            <div>
+            <div className="location-content">
 
               <p className="section-label">
                 Our Location

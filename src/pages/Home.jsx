@@ -236,13 +236,7 @@ function Home() {
 
               {/* Apply Matrimony */}
 
-              <Link
-                to="/matrimony/apply"
-                className="matrimony-apply-btn"
-              >
-                📝 Apply for Matrimony
-              </Link>
-
+             
 
               {/* Application Information */}
 

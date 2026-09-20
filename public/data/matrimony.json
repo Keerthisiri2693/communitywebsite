@@ -8,6 +8,20 @@
     "education": "B.E",
     "profession": "Software Developer",
     "photo": "/images/matrimony/profile.png",
-    "active": true
+    "active": true,
+    "status": "PENDING"
+  },
+  {
+    "id": 2,
+    "name": "keerthana siriyalu",
+    "age": 25,
+    "gender": "Female",
+    "location": "Tiruvarur",
+    "education": "MCA",
+    "profession": "software developer",
+    "photo": "",
+    "description": "",
+    "active": true,
+    "status": "APPROVED"
   }
 ]

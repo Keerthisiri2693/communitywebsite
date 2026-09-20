@@ -51,7 +51,6 @@ function PublicLayout({ children }) {
   );
 }
 
-
 // ===============================
 // 404 PAGE
 // ===============================
@@ -59,7 +58,6 @@ function PublicLayout({ children }) {
 function NotFound() {
   return (
     <PublicLayout>
-
       <div
         style={{
           minHeight: "70vh",
@@ -72,7 +70,6 @@ function NotFound() {
           fontFamily: "Arial, sans-serif",
         }}
       >
-
         <div
           style={{
             fontSize: "60px",
@@ -114,13 +111,10 @@ function NotFound() {
         >
           ← Go Home
         </Link>
-
       </div>
-
     </PublicLayout>
   );
 }
-
 
 // ===============================
 // APP
@@ -128,9 +122,7 @@ function NotFound() {
 
 function App() {
   return (
-
     <BrowserRouter>
-
       <Routes>
 
         {/* =================================
@@ -146,7 +138,6 @@ function App() {
           }
         />
 
-
         {/* =================================
             ABOUT
         ================================== */}
@@ -159,7 +150,6 @@ function App() {
             </PublicLayout>
           }
         />
-
 
         {/* =================================
             SERVICES
@@ -174,7 +164,6 @@ function App() {
           }
         />
 
-
         {/* =================================
             MATRIMONY
         ================================== */}
@@ -187,7 +176,6 @@ function App() {
             </PublicLayout>
           }
         />
-
 
         {/* =================================
             MATRIMONY APPLICATION
@@ -202,7 +190,6 @@ function App() {
           }
         />
 
-
         {/* =================================
             ADVERTISEMENT
         ================================== */}
@@ -215,7 +202,6 @@ function App() {
             </PublicLayout>
           }
         />
-
 
         {/* =================================
             CONTACT
@@ -230,6 +216,19 @@ function App() {
           }
         />
 
+        {/* =================================
+            CONTACT ALIAS
+            /contact/admin also opens Contact
+        ================================== */}
+
+        <Route
+          path="/contact/admin"
+          element={
+            <PublicLayout>
+              <Contact />
+            </PublicLayout>
+          }
+        />
 
         {/* =================================
             ADMIN LOGIN
@@ -242,7 +241,6 @@ function App() {
           }
         />
 
-
         {/* =================================
             ADMIN DASHBOARD
         ================================== */}
@@ -253,7 +251,6 @@ function App() {
             <AdminDashboard />
           }
         />
-
 
         {/* =================================
             ADMIN MATRIMONY
@@ -266,7 +263,6 @@ function App() {
           }
         />
 
-
         {/* =================================
             ADMIN ADVERTISEMENTS
         ================================== */}
@@ -277,7 +273,6 @@ function App() {
             <AdvertisementManager />
           }
         />
-
 
         {/* =================================
             404
@@ -291,11 +286,8 @@ function App() {
         />
 
       </Routes>
-
     </BrowserRouter>
-
   );
 }
 
 export default App;
-

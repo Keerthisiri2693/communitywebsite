@@ -1,6 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import "./MatrimonyManager.css";
+
+// ==========================================
+// CONSTANTS
+// ==========================================
+
+const STORAGE_KEY = "community_matrimony_profiles";
+
+const STATUS = {
+  PENDING: "PENDING",
+  APPROVED: "APPROVED",
+  REJECTED: "REJECTED",
+};
+
+// ==========================================
+// EMPTY FORM
+// ==========================================
 
 const emptyForm = {
   id: null,
@@ -13,17 +29,68 @@ const emptyForm = {
   photo: "",
   description: "",
   active: true,
+  status: STATUS.PENDING,
 };
+
+// ==========================================
+// STATUS HELPERS
+// ==========================================
+
+const normalizeStatus = (status) => {
+  const value = String(status || "")
+    .trim()
+    .toUpperCase();
+
+  if (
+    value === STATUS.APPROVED ||
+    value === STATUS.REJECTED ||
+    value === STATUS.PENDING
+  ) {
+    return value;
+  }
+
+  return STATUS.PENDING;
+};
+
+const getStatusLabel = (status) => {
+  switch (normalizeStatus(status)) {
+    case STATUS.APPROVED:
+      return "Approved";
+
+    case STATUS.REJECTED:
+      return "Rejected";
+
+    default:
+      return "Pending";
+  }
+};
+
+// ==========================================
+// COMPONENT
+// ==========================================
 
 function MatrimonyManager() {
   const [profiles, setProfiles] = useState([]);
+
   const [form, setForm] = useState(emptyForm);
 
   const [editingId, setEditingId] = useState(null);
+
   const [loading, setLoading] = useState(true);
+
   const [message, setMessage] = useState("");
+
+  const [messageType, setMessageType] = useState("success");
+
   const [search, setSearch] = useState("");
+
   const [genderFilter, setGenderFilter] = useState("All");
+
+  const [statusFilter, setStatusFilter] = useState("All");
+
+  // ==========================================
+  // LOAD PROFILES
+  // ==========================================
 
   useEffect(() => {
     loadProfiles();
@@ -32,6 +99,47 @@ function MatrimonyManager() {
   const loadProfiles = async () => {
     try {
       setLoading(true);
+
+      // --------------------------------------
+      // First check localStorage
+      // --------------------------------------
+
+      const savedProfiles =
+        localStorage.getItem(STORAGE_KEY);
+
+      if (savedProfiles) {
+        try {
+          const parsed = JSON.parse(savedProfiles);
+
+          if (Array.isArray(parsed)) {
+            const normalizedProfiles = parsed.map(
+              (profile) => ({
+                ...profile,
+                status: normalizeStatus(
+                  profile.status
+                ),
+                active:
+                  profile.active !== false &&
+                  normalizeStatus(
+                    profile.status
+                  ) !== STATUS.REJECTED,
+              })
+            );
+
+            setProfiles(normalizedProfiles);
+            return;
+          }
+        } catch (storageError) {
+          console.warn(
+            "Invalid saved matrimony data:",
+            storageError
+          );
+        }
+      }
+
+      // --------------------------------------
+      // Otherwise load initial JSON
+      // --------------------------------------
 
       const response = await fetch(
         "/data/matrimony.json"
@@ -45,29 +153,81 @@ function MatrimonyManager() {
 
       const data = await response.json();
 
-      setProfiles(Array.isArray(data) ? data : []);
+      const normalizedData = Array.isArray(data)
+        ? data.map((profile) => ({
+            ...profile,
+            status: normalizeStatus(
+              profile.status
+            ),
+            active:
+              profile.active !== false &&
+              normalizeStatus(
+                profile.status
+              ) !== STATUS.REJECTED,
+          }))
+        : [];
+
+      setProfiles(normalizedData);
+
+      // Save initial data locally
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(normalizedData)
+      );
     } catch (error) {
-      console.error(error);
+      console.error(
+        "MATRIMONY LOAD ERROR:",
+        error
+      );
 
       setMessage(
-        "Unable to load matrimony.json"
+        "Unable to load matrimony profiles."
       );
+
+      setMessageType("error");
     } finally {
       setLoading(false);
     }
   };
 
+  // ==========================================
+  // SAVE TO LOCAL STORAGE
+  // ==========================================
+
+  const saveProfiles = (updatedProfiles) => {
+    setProfiles(updatedProfiles);
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(updatedProfiles)
+    );
+  };
+
+  // ==========================================
+  // FORM CHANGE
+  // ==========================================
+
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const {
+      name,
+      value,
+      type,
+      checked,
+    } = e.target;
 
     setForm((prev) => ({
       ...prev,
+
       [name]:
         type === "checkbox"
           ? checked
           : value,
     }));
   };
+
+  // ==========================================
+  // SUBMIT PROFILE
+  // ==========================================
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,103 +236,208 @@ function MatrimonyManager() {
 
     if (!form.name.trim()) {
       setMessage("Name is required.");
+      setMessageType("error");
       return;
     }
 
     if (!form.age) {
       setMessage("Age is required.");
+      setMessageType("error");
+      return;
+    }
+
+    if (Number(form.age) < 18) {
+      setMessage(
+        "Matrimony profile age must be 18 or above."
+      );
+      setMessageType("error");
       return;
     }
 
     if (!form.gender) {
       setMessage("Gender is required.");
+      setMessageType("error");
       return;
     }
 
     if (!form.location.trim()) {
       setMessage("Location is required.");
+      setMessageType("error");
       return;
     }
 
+    // ========================================
+    // UPDATE EXISTING PROFILE
+    // ========================================
+
     if (editingId !== null) {
-      setProfiles((prev) =>
-        prev.map((profile) =>
+      const updatedProfiles = profiles.map(
+        (profile) =>
           profile.id === editingId
             ? {
+                ...profile,
+
                 ...form,
+
                 id: editingId,
+
                 age: Number(form.age),
+
                 name: form.name.trim(),
+
                 location:
                   form.location.trim(),
+
                 education:
                   form.education.trim(),
+
                 profession:
                   form.profession.trim(),
+
                 description:
                   form.description.trim(),
+
+                status: normalizeStatus(
+                  form.status
+                ),
+
+                active:
+                  normalizeStatus(
+                    form.status
+                  ) === STATUS.APPROVED
+                    ? true
+                    : normalizeStatus(
+                        form.status
+                      ) === STATUS.REJECTED
+                    ? false
+                    : form.active,
               }
             : profile
-        )
       );
+
+      saveProfiles(updatedProfiles);
 
       setMessage(
         "Matrimony profile updated successfully."
       );
-    } else {
-      const newId =
-        profiles.length > 0
-          ? Math.max(
-              ...profiles.map(
-                (profile) =>
-                  Number(profile.id) || 0
-              )
-            ) + 1
-          : 1;
 
-      const newProfile = {
-        ...form,
-        id: newId,
-        age: Number(form.age),
-        name: form.name.trim(),
-        location: form.location.trim(),
-        education:
-          form.education.trim(),
-        profession:
-          form.profession.trim(),
-        description:
-          form.description.trim(),
-      };
+      setMessageType("success");
 
-      setProfiles((prev) => [
-        ...prev,
-        newProfile,
-      ]);
+      resetForm();
 
-      setMessage(
-        "Matrimony profile added successfully."
-      );
+      return;
     }
+
+    // ========================================
+    // CREATE NEW PROFILE
+    // ========================================
+
+    const newId =
+      profiles.length > 0
+        ? Math.max(
+            ...profiles.map(
+              (profile) =>
+                Number(profile.id) || 0
+            )
+          ) + 1
+        : 1;
+
+    const newProfile = {
+      ...form,
+
+      id: newId,
+
+      age: Number(form.age),
+
+      name: form.name.trim(),
+
+      location: form.location.trim(),
+
+      education:
+        form.education.trim(),
+
+      profession:
+        form.profession.trim(),
+
+      description:
+        form.description.trim(),
+
+      status: normalizeStatus(
+        form.status
+      ),
+
+      active:
+        normalizeStatus(
+          form.status
+        ) === STATUS.APPROVED
+          ? true
+          : normalizeStatus(
+              form.status
+            ) === STATUS.REJECTED
+          ? false
+          : form.active,
+    };
+
+    const updatedProfiles = [
+      ...profiles,
+      newProfile,
+    ];
+
+    saveProfiles(updatedProfiles);
+
+    setMessage(
+      "Matrimony profile added successfully."
+    );
+
+    setMessageType("success");
 
     resetForm();
   };
 
+  // ==========================================
+  // EDIT
+  // ==========================================
+
   const handleEdit = (profile) => {
+    const status = normalizeStatus(
+      profile.status
+    );
+
     setForm({
       id: profile.id,
+
       name: profile.name || "",
+
       age: profile.age || "",
-      gender: profile.gender || "Female",
-      location: profile.location || "",
-      education: profile.education || "",
-      profession: profile.profession || "",
-      photo: profile.photo || "",
+
+      gender:
+        profile.gender || "Female",
+
+      location:
+        profile.location || "",
+
+      education:
+        profile.education || "",
+
+      profession:
+        profile.profession || "",
+
+      photo:
+        profile.photo || "",
+
       description:
         profile.description || "",
-      active: profile.active !== false,
+
+      active:
+        status === STATUS.REJECTED
+          ? false
+          : profile.active !== false,
+
+      status,
     });
 
     setEditingId(profile.id);
+
     setMessage("");
 
     window.scrollTo({
@@ -181,20 +446,27 @@ function MatrimonyManager() {
     });
   };
 
+  // ==========================================
+  // DELETE
+  // ==========================================
+
   const handleDelete = (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this matrimonial profile?"
-    );
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to permanently delete this matrimonial profile?"
+      );
 
     if (!confirmed) {
       return;
     }
 
-    setProfiles((prev) =>
-      prev.filter(
-        (profile) => profile.id !== id
-      )
-    );
+    const updatedProfiles =
+      profiles.filter(
+        (profile) =>
+          profile.id !== id
+      );
+
+    saveProfiles(updatedProfiles);
 
     if (editingId === id) {
       resetForm();
@@ -203,32 +475,163 @@ function MatrimonyManager() {
     setMessage(
       "Matrimony profile deleted."
     );
+
+    setMessageType("success");
   };
 
+  // ==========================================
+  // UPDATE APPLICATION STATUS
+  // ==========================================
+
+  const updateApplicationStatus = (
+    id,
+    status
+  ) => {
+    const normalizedStatus =
+      normalizeStatus(status);
+
+    const updatedProfiles =
+      profiles.map((profile) => {
+        if (profile.id !== id) {
+          return profile;
+        }
+
+        return {
+          ...profile,
+
+          status: normalizedStatus,
+
+          active:
+            normalizedStatus ===
+            STATUS.APPROVED
+              ? true
+              : normalizedStatus ===
+                STATUS.REJECTED
+              ? false
+              : profile.active,
+        };
+      });
+
+    saveProfiles(updatedProfiles);
+
+    if (
+      editingId === id
+    ) {
+      setForm((prev) => ({
+        ...prev,
+
+        status:
+          normalizedStatus,
+
+        active:
+          normalizedStatus ===
+          STATUS.APPROVED
+            ? true
+            : normalizedStatus ===
+              STATUS.REJECTED
+            ? false
+            : prev.active,
+      }));
+    }
+
+    const messages = {
+      [STATUS.APPROVED]:
+        "Matrimony application approved successfully.",
+
+      [STATUS.REJECTED]:
+        "Matrimony application rejected.",
+
+      [STATUS.PENDING]:
+        "Matrimony application moved back to pending.",
+    };
+
+    setMessage(
+      messages[normalizedStatus]
+    );
+
+    setMessageType(
+      normalizedStatus ===
+        STATUS.REJECTED
+        ? "warning"
+        : "success"
+    );
+  };
+
+  // ==========================================
+  // TOGGLE ACTIVE
+  // ==========================================
+
   const toggleActive = (id) => {
-    setProfiles((prev) =>
-      prev.map((profile) =>
+    const updatedProfiles =
+      profiles.map((profile) =>
         profile.id === id
           ? {
               ...profile,
-              active: !profile.active,
+              active:
+                !profile.active,
             }
           : profile
-      )
+      );
+
+    saveProfiles(updatedProfiles);
+
+    setMessage(
+      "Profile visibility updated."
     );
+
+    setMessageType("success");
   };
+
+  // ==========================================
+  // RESET FORM
+  // ==========================================
 
   const resetForm = () => {
     setForm(emptyForm);
+
     setEditingId(null);
   };
 
-  const downloadJSON = () => {
-    const jsonData = JSON.stringify(
-      profiles,
-      null,
-      2
+  // ==========================================
+  // CLEAR LOCAL DATA
+  // ==========================================
+
+  const clearLocalData = () => {
+    const confirmed =
+      window.confirm(
+        "This will remove all locally saved changes and reload the original matrimony.json data. Continue?"
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    localStorage.removeItem(
+      STORAGE_KEY
     );
+
+    setMessage(
+      "Local changes cleared. Reloading original data..."
+    );
+
+    setMessageType("success");
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  };
+
+  // ==========================================
+  // EXPORT JSON
+  // ==========================================
+
+  const downloadJSON = () => {
+    const jsonData =
+      JSON.stringify(
+        profiles,
+        null,
+        2
+      );
 
     const blob = new Blob(
       [jsonData],
@@ -244,28 +647,40 @@ function MatrimonyManager() {
       document.createElement("a");
 
     link.href = url;
+
     link.download =
       "matrimony-updated.json";
 
-    document.body.appendChild(link);
+    document.body.appendChild(
+      link
+    );
 
     link.click();
 
-    document.body.removeChild(link);
+    document.body.removeChild(
+      link
+    );
 
     URL.revokeObjectURL(url);
 
     setMessage(
       "Updated matrimony JSON downloaded successfully."
     );
+
+    setMessageType("success");
   };
 
+  // ==========================================
+  // BACKUP
+  // ==========================================
+
   const downloadBackup = () => {
-    const jsonData = JSON.stringify(
-      profiles,
-      null,
-      2
-    );
+    const jsonData =
+      JSON.stringify(
+        profiles,
+        null,
+        2
+      );
 
     const blob = new Blob(
       [jsonData],
@@ -285,51 +700,162 @@ function MatrimonyManager() {
     link.download =
       `matrimony-backup-${Date.now()}.json`;
 
-    document.body.appendChild(link);
+    document.body.appendChild(
+      link
+    );
 
     link.click();
 
-    document.body.removeChild(link);
+    document.body.removeChild(
+      link
+    );
 
     URL.revokeObjectURL(url);
+
+    setMessage(
+      "Matrimony backup downloaded successfully."
+    );
+
+    setMessageType("success");
   };
 
+  // ==========================================
+  // COUNTS
+  // ==========================================
+
+  const counts = useMemo(() => {
+    return profiles.reduce(
+      (result, profile) => {
+        const status =
+          normalizeStatus(
+            profile.status
+          );
+
+        result.total += 1;
+
+        if (
+          status ===
+          STATUS.PENDING
+        ) {
+          result.pending += 1;
+        }
+
+        if (
+          status ===
+          STATUS.APPROVED
+        ) {
+          result.approved += 1;
+        }
+
+        if (
+          status ===
+          STATUS.REJECTED
+        ) {
+          result.rejected += 1;
+        }
+
+        if (
+          profile.active
+        ) {
+          result.active += 1;
+        }
+
+        return result;
+      },
+      {
+        total: 0,
+        pending: 0,
+        approved: 0,
+        rejected: 0,
+        active: 0,
+      }
+    );
+  }, [profiles]);
+
+  // ==========================================
+  // FILTERED PROFILES
+  // ==========================================
+
   const filteredProfiles =
-    profiles.filter((profile) => {
-      const searchText =
-        search.toLowerCase().trim();
+    useMemo(() => {
+      return profiles.filter(
+        (profile) => {
+          const searchText =
+            search
+              .toLowerCase()
+              .trim();
 
-      const matchesSearch =
-        !searchText ||
-        String(profile.name || "")
-          .toLowerCase()
-          .includes(searchText) ||
-        String(profile.location || "")
-          .toLowerCase()
-          .includes(searchText) ||
-        String(profile.education || "")
-          .toLowerCase()
-          .includes(searchText) ||
-        String(profile.profession || "")
-          .toLowerCase()
-          .includes(searchText);
+          const matchesSearch =
+            !searchText ||
+            String(
+              profile.name || ""
+            )
+              .toLowerCase()
+              .includes(
+                searchText
+              ) ||
+            String(
+              profile.location ||
+                ""
+            )
+              .toLowerCase()
+              .includes(
+                searchText
+              ) ||
+            String(
+              profile.education ||
+                ""
+            )
+              .toLowerCase()
+              .includes(
+                searchText
+              ) ||
+            String(
+              profile.profession ||
+                ""
+            )
+              .toLowerCase()
+              .includes(
+                searchText
+              );
 
-      const matchesGender =
-        genderFilter === "All" ||
-        profile.gender === genderFilter;
+          const matchesGender =
+            genderFilter ===
+              "All" ||
+            profile.gender ===
+              genderFilter;
 
-      return (
-        matchesSearch &&
-        matchesGender
+          const matchesStatus =
+            statusFilter ===
+              "All" ||
+            normalizeStatus(
+              profile.status
+            ) === statusFilter;
+
+          return (
+            matchesSearch &&
+            matchesGender &&
+            matchesStatus
+          );
+        }
       );
-    });
+    }, [
+      profiles,
+      search,
+      genderFilter,
+      statusFilter,
+    ]);
+
+  // ==========================================
+  // RENDER
+  // ==========================================
 
   return (
     <div className="matrimony-manager">
 
-      {/* =========================
+      {/* ======================================
           HEADER
-      ========================== */}
+      ======================================= */}
 
       <header className="matrimony-manager-header">
 
@@ -346,35 +872,63 @@ function MatrimonyManager() {
           </h1>
 
           <p>
-            Manage matrimonial profiles
+            Review and manage matrimonial
+            applications
           </p>
         </div>
 
-        <button
-          type="button"
-          className="matrimony-export-btn"
-          onClick={downloadJSON}
-        >
-          📥 Export JSON
-        </button>
+        <div className="matrimony-header-actions">
+
+          <button
+            type="button"
+            className="matrimony-export-btn"
+            onClick={downloadJSON}
+          >
+            📥 Export JSON
+          </button>
+
+          <button
+            type="button"
+            className="matrimony-backup-btn"
+            onClick={downloadBackup}
+          >
+            💾 Backup
+          </button>
+
+        </div>
 
       </header>
 
+
       <main className="matrimony-manager-content">
 
-        {/* =========================
+        {/* ======================================
             MESSAGE
-        ========================== */}
+        ======================================= */}
 
         {message && (
-          <div className="matrimony-manager-message">
-            {message}
+          <div
+            className={`matrimony-manager-message ${messageType}`}
+          >
+            <span>
+              {messageType === "error"
+                ? "⚠️"
+                : messageType ===
+                  "warning"
+                ? "⚠️"
+                : "✅"}
+            </span>
+
+            <span>
+              {message}
+            </span>
           </div>
         )}
 
-        {/* =========================
-            PRIVACY WARNING
-        ========================== */}
+
+        {/* ======================================
+            PRIVACY
+        ======================================= */}
 
         <section className="matrimony-privacy-warning">
 
@@ -389,18 +943,146 @@ function MatrimonyManager() {
 
             <p>
               Do not store Aadhaar numbers,
-              passwords, bank details, government
-              ID numbers or other sensitive
-              personal information in the public
-              matrimonial JSON file.
+              passwords, bank details,
+              government ID numbers or other
+              sensitive personal information
+              in the public matrimonial JSON
+              file.
             </p>
           </div>
 
         </section>
 
-        {/* =========================
+
+        {/* ======================================
+            STATUS DASHBOARD
+        ======================================= */}
+
+        <section className="matrimony-statistics">
+
+          <div
+            className="matrimony-stat-card total"
+            onClick={() =>
+              setStatusFilter("All")
+            }
+          >
+            <div className="stat-icon">
+              👥
+            </div>
+
+            <div>
+              <span>
+                Total Applications
+              </span>
+
+              <strong>
+                {counts.total}
+              </strong>
+            </div>
+          </div>
+
+
+          <div
+            className="matrimony-stat-card pending"
+            onClick={() =>
+              setStatusFilter(
+                STATUS.PENDING
+              )
+            }
+          >
+            <div className="stat-icon">
+              ⏳
+            </div>
+
+            <div>
+              <span>
+                Pending
+              </span>
+
+              <strong>
+                {counts.pending}
+              </strong>
+            </div>
+          </div>
+
+
+          <div
+            className="matrimony-stat-card approved"
+            onClick={() =>
+              setStatusFilter(
+                STATUS.APPROVED
+              )
+            }
+          >
+            <div className="stat-icon">
+              ✅
+            </div>
+
+            <div>
+              <span>
+                Approved
+              </span>
+
+              <strong>
+                {counts.approved}
+              </strong>
+            </div>
+          </div>
+
+
+          <div
+            className="matrimony-stat-card rejected"
+            onClick={() =>
+              setStatusFilter(
+                STATUS.REJECTED
+              )
+            }
+          >
+            <div className="stat-icon">
+              ❌
+            </div>
+
+            <div>
+              <span>
+                Rejected
+              </span>
+
+              <strong>
+                {counts.rejected}
+              </strong>
+            </div>
+          </div>
+
+
+          <div
+            className="matrimony-stat-card active"
+            onClick={() =>
+              setStatusFilter(
+                STATUS.APPROVED
+              )
+            }
+          >
+            <div className="stat-icon">
+              🌐
+            </div>
+
+            <div>
+              <span>
+                Public Profiles
+              </span>
+
+              <strong>
+                {counts.active}
+              </strong>
+            </div>
+          </div>
+
+        </section>
+
+
+        {/* ======================================
             PROFILE FORM
-        ========================== */}
+        ======================================= */}
 
         <section className="matrimony-editor">
 
@@ -427,12 +1109,11 @@ function MatrimonyManager() {
 
           </div>
 
+
           <form
             className="matrimony-form"
             onSubmit={handleSubmit}
           >
-
-            {/* Name */}
 
             <div className="matrimony-field">
               <label>
@@ -449,7 +1130,6 @@ function MatrimonyManager() {
               />
             </div>
 
-            {/* Age */}
 
             <div className="matrimony-field">
               <label>
@@ -468,7 +1148,6 @@ function MatrimonyManager() {
               />
             </div>
 
-            {/* Gender */}
 
             <div className="matrimony-field">
               <label>
@@ -490,7 +1169,6 @@ function MatrimonyManager() {
               </select>
             </div>
 
-            {/* Location */}
 
             <div className="matrimony-field">
               <label>
@@ -502,12 +1180,11 @@ function MatrimonyManager() {
                 name="location"
                 value={form.location}
                 onChange={handleChange}
-                placeholder="Sivakasi"
+                placeholder="Chennai"
                 required
               />
             </div>
 
-            {/* Education */}
 
             <div className="matrimony-field">
               <label>
@@ -523,7 +1200,6 @@ function MatrimonyManager() {
               />
             </div>
 
-            {/* Profession */}
 
             <div className="matrimony-field">
               <label>
@@ -539,9 +1215,8 @@ function MatrimonyManager() {
               />
             </div>
 
-            {/* Photo */}
 
-            <div className="matrimony-field full-field">
+            <div className="matrimony-field">
               <label>
                 Photo Path
               </label>
@@ -560,9 +1235,34 @@ function MatrimonyManager() {
               </small>
             </div>
 
-            {/* Description */}
+
+            <div className="matrimony-field">
+              <label>
+                Application Status
+              </label>
+
+              <select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+              >
+                <option value="PENDING">
+                  Pending
+                </option>
+
+                <option value="APPROVED">
+                  Approved
+                </option>
+
+                <option value="REJECTED">
+                  Rejected
+                </option>
+              </select>
+            </div>
+
 
             <div className="matrimony-field full-field">
+
               <label>
                 Description
               </label>
@@ -574,9 +1274,9 @@ function MatrimonyManager() {
                 placeholder="Enter a short matrimonial profile description"
                 rows="4"
               />
+
             </div>
 
-            {/* Active */}
 
             <div className="matrimony-active-field">
 
@@ -597,7 +1297,6 @@ function MatrimonyManager() {
 
             </div>
 
-            {/* Buttons */}
 
             <div className="matrimony-form-actions">
 
@@ -609,6 +1308,7 @@ function MatrimonyManager() {
                   ? "💾 Update Profile"
                   : "➕ Add Profile"}
               </button>
+
 
               {editingId !== null && (
                 <button
@@ -626,9 +1326,10 @@ function MatrimonyManager() {
 
         </section>
 
-        {/* =========================
-            PROFILE LIST
-        ========================== */}
+
+        {/* ======================================
+            APPLICATION LIST
+        ======================================= */}
 
         <section className="matrimony-list-section">
 
@@ -636,36 +1337,54 @@ function MatrimonyManager() {
 
             <div>
               <h2>
-                Matrimony Profiles
+                Matrimony Applications
               </h2>
 
               <p>
-                {profiles.length} total profiles
+                Showing{" "}
+                <strong>
+                  {filteredProfiles.length}
+                </strong>{" "}
+                of {profiles.length} profiles
               </p>
             </div>
 
             <button
               type="button"
-              className="matrimony-backup-btn"
-              onClick={downloadBackup}
+              className="matrimony-clear-btn"
+              onClick={clearLocalData}
             >
-              💾 Download Backup
+              ♻️ Reset Local Data
             </button>
 
           </div>
 
-          {/* Filters */}
+
+          {/* ====================================
+              FILTERS
+          ===================================== */}
 
           <div className="matrimony-filters">
 
-            <input
-              type="text"
-              placeholder="Search name, location, education..."
-              value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
-            />
+            <div className="matrimony-search-box">
+
+              <span>
+                🔎
+              </span>
+
+              <input
+                type="text"
+                placeholder="Search name, location, education..."
+                value={search}
+                onChange={(e) =>
+                  setSearch(
+                    e.target.value
+                  )
+                }
+              />
+
+            </div>
+
 
             <select
               value={genderFilter}
@@ -688,171 +1407,308 @@ function MatrimonyManager() {
               </option>
             </select>
 
+
+            <select
+              value={statusFilter}
+              onChange={(e) =>
+                setStatusFilter(
+                  e.target.value
+                )
+              }
+            >
+              <option value="All">
+                All Status
+              </option>
+
+              <option value="PENDING">
+                Pending
+              </option>
+
+              <option value="APPROVED">
+                Approved
+              </option>
+
+              <option value="REJECTED">
+                Rejected
+              </option>
+            </select>
+
           </div>
 
-          {/* Profiles */}
+
+          {/* ====================================
+              PROFILES
+          ===================================== */}
 
           {loading ? (
             <div className="matrimony-manager-empty">
-              Loading matrimonial profiles...
+
+              <div className="loading-spinner"></div>
+
+              <p>
+                Loading matrimonial
+                applications...
+              </p>
+
             </div>
           ) : filteredProfiles.length === 0 ? (
             <div className="matrimony-manager-empty">
-              No profiles found.
+
+              <div className="empty-icon">
+                🔍
+              </div>
+
+              <h3>
+                No applications found
+              </h3>
+
+              <p>
+                Try changing your search
+                or filters.
+              </p>
+
             </div>
           ) : (
             <div className="matrimony-admin-grid">
 
               {filteredProfiles.map(
-                (profile) => (
-                  <article
-                    key={profile.id}
-                    className={`matrimony-admin-card ${
-                      profile.active
-                        ? ""
-                        : "profile-inactive"
-                    }`}
-                  >
+                (profile) => {
+                  const status =
+                    normalizeStatus(
+                      profile.status
+                    );
 
-                    {/* Image */}
+                  return (
+                    <article
+                      key={profile.id}
+                      className={`matrimony-admin-card ${
+                        profile.active
+                          ? ""
+                          : "profile-inactive"
+                      }`}
+                    >
 
-                    <div className="matrimony-admin-image">
+                      {/* IMAGE */}
 
-                      {profile.photo ? (
-                        <img
-                          src={profile.photo}
-                          alt={
-                            profile.name ||
-                            "Matrimony profile"
-                          }
-                        />
-                      ) : (
-                        <div className="matrimony-image-placeholder">
-                          👤
-                        </div>
-                      )}
+                      <div className="matrimony-admin-image">
 
-                      <span
-                        className={
-                          profile.active
-                            ? "profile-active-status"
-                            : "profile-hidden-status"
-                        }
-                      >
-                        {profile.active
-                          ? "Active"
-                          : "Hidden"}
-                      </span>
+                        {profile.photo ? (
+                          <img
+                            src={profile.photo}
+                            alt={
+                              profile.name ||
+                              "Matrimony profile"
+                            }
+                            onError={(e) => {
+                              e.currentTarget.style.display =
+                                "none";
+                            }}
+                          />
+                        ) : (
+                          <div className="matrimony-image-placeholder">
+                            👤
+                          </div>
+                        )}
 
-                    </div>
 
-                    {/* Content */}
+                        <span
+                          className={`profile-application-status ${status.toLowerCase()}`}
+                        >
+                          {getStatusLabel(
+                            status
+                          )}
+                        </span>
 
-                    <div className="matrimony-admin-content">
+                      </div>
 
-                      <div className="matrimony-admin-title-row">
 
-                        <div>
-                          <h3>
-                            {profile.name}
-                          </h3>
+                      {/* CONTENT */}
 
-                          {profile.age && (
-                            <span>
-                              {profile.age} years
+                      <div className="matrimony-admin-content">
+
+                        <div className="matrimony-admin-title-row">
+
+                          <div>
+                            <h3>
+                              {profile.name}
+                            </h3>
+
+                            {profile.age && (
+                              <span>
+                                {profile.age}{" "}
+                                years
+                              </span>
+                            )}
+                          </div>
+
+
+                          {profile.gender && (
+                            <span className="profile-gender">
+                              {profile.gender}
                             </span>
                           )}
+
                         </div>
 
-                        {profile.gender && (
-                          <span className="profile-gender">
-                            {profile.gender}
+
+                        <div className="matrimony-admin-details">
+
+                          {profile.location && (
+                            <div>
+                              📍{" "}
+                              {profile.location}
+                            </div>
+                          )}
+
+                          {profile.education && (
+                            <div>
+                              🎓{" "}
+                              {profile.education}
+                            </div>
+                          )}
+
+                          {profile.profession && (
+                            <div>
+                              💼{" "}
+                              {profile.profession}
+                            </div>
+                          )}
+
+                        </div>
+
+
+                        {profile.description && (
+                          <p className="profile-description">
+                            {profile.description}
+                          </p>
+                        )}
+
+
+                        {/* STATUS INFO */}
+
+                        <div className="profile-status-info">
+
+                          <span>
+                            Status
                           </span>
-                        )}
+
+                          <strong
+                            className={`status-text ${status.toLowerCase()}`}
+                          >
+                            {getStatusLabel(
+                              status
+                            )}
+                          </strong>
+
+                        </div>
+
+
+                        {/* ACTIONS */}
+
+                        <div className="matrimony-admin-actions">
+
+                          {status !==
+                            STATUS.APPROVED && (
+                            <button
+                              type="button"
+                              className="matrimony-approve-btn"
+                              onClick={() =>
+                                updateApplicationStatus(
+                                  profile.id,
+                                  STATUS.APPROVED
+                                )
+                              }
+                            >
+                              ✅ Approve
+                            </button>
+                          )}
+
+
+                          {status !==
+                            STATUS.REJECTED && (
+                            <button
+                              type="button"
+                              className="matrimony-reject-btn"
+                              onClick={() =>
+                                updateApplicationStatus(
+                                  profile.id,
+                                  STATUS.REJECTED
+                                )
+                              }
+                            >
+                              ❌ Reject
+                            </button>
+                          )}
+
+
+                          {status !==
+                            STATUS.PENDING && (
+                            <button
+                              type="button"
+                              className="matrimony-pending-btn"
+                              onClick={() =>
+                                updateApplicationStatus(
+                                  profile.id,
+                                  STATUS.PENDING
+                                )
+                              }
+                            >
+                              ↩️ Pending
+                            </button>
+                          )}
+
+
+                          <button
+                            type="button"
+                            className="matrimony-edit-btn"
+                            onClick={() =>
+                              handleEdit(
+                                profile
+                              )
+                            }
+                          >
+                            ✏️ Edit
+                          </button>
+
+
+                          <button
+                            type="button"
+                            className={
+                              profile.active
+                                ? "matrimony-hide-btn"
+                                : "matrimony-show-btn"
+                            }
+                            onClick={() =>
+                              toggleActive(
+                                profile.id
+                              )
+                            }
+                          >
+                            {profile.active
+                              ? "🙈 Hide"
+                              : "👁️ Show"}
+                          </button>
+
+
+                          <button
+                            type="button"
+                            className="matrimony-delete-btn"
+                            onClick={() =>
+                              handleDelete(
+                                profile.id
+                              )
+                            }
+                          >
+                            🗑️ Delete
+                          </button>
+
+                        </div>
 
                       </div>
 
-                      <div className="matrimony-admin-details">
-
-                        {profile.location && (
-                          <div>
-                            📍{" "}
-                            {profile.location}
-                          </div>
-                        )}
-
-                        {profile.education && (
-                          <div>
-                            🎓{" "}
-                            {profile.education}
-                          </div>
-                        )}
-
-                        {profile.profession && (
-                          <div>
-                            💼{" "}
-                            {profile.profession}
-                          </div>
-                        )}
-
-                      </div>
-
-                      {profile.description && (
-                        <p className="profile-description">
-                          {profile.description}
-                        </p>
-                      )}
-
-                      {/* Actions */}
-
-                      <div className="matrimony-admin-actions">
-
-                        <button
-                          type="button"
-                          className="matrimony-edit-btn"
-                          onClick={() =>
-                            handleEdit(profile)
-                          }
-                        >
-                          ✏️ Edit
-                        </button>
-
-                        <button
-                          type="button"
-                          className={
-                            profile.active
-                              ? "matrimony-hide-btn"
-                              : "matrimony-show-btn"
-                          }
-                          onClick={() =>
-                            toggleActive(
-                              profile.id
-                            )
-                          }
-                        >
-                          {profile.active
-                            ? "🙈 Hide"
-                            : "👁️ Show"}
-                        </button>
-
-                        <button
-                          type="button"
-                          className="matrimony-delete-btn"
-                          onClick={() =>
-                            handleDelete(
-                              profile.id
-                            )
-                          }
-                        >
-                          🗑️ Delete
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                  </article>
-                )
+                    </article>
+                  );
+                }
               )}
 
             </div>
@@ -860,9 +1716,8 @@ function MatrimonyManager() {
 
         </section>
 
-       
-
       </main>
+
     </div>
   );
 }
