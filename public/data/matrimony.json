@@ -9,7 +9,8 @@
     "profession": "Software Developer",
     "photo": "/images/matrimony/profile.png",
     "active": true,
-    "status": "PENDING"
+    "status": "APPROVED",
+    "description": ""
   },
   {
     "id": 2,
@@ -21,7 +22,7 @@
     "profession": "software developer",
     "photo": "",
     "description": "",
-    "active": true,
-    "status": "APPROVED"
+    "active": false,
+    "status": "Approved"
   }
 ]
